@@ -12,23 +12,13 @@ import random
 from paho.mqtt import client as mqtt_client
 import json
 
-# MQTT Setup
-broker = "192.168.0.14"
-port = 1883
-topic = "python/mqtt"
-# Generate a Client ID with the publish prefix.
-client_id = f'publish-{random.randint(0, 1000)}'
-username_mqtt = 'craig'
-password_mqtt = 'revaeb'
-
-
 # Create a parser object
 parser = argparse.ArgumentParser(description="A script that takes username, password, and login URL as arguments.")
 
 # Add arguments to the parser
 parser.add_argument("username", type=str, help="Your username")
 parser.add_argument("password", type=str, help="Your password")
-parser.add_argument("login_url", type=str, help="The URL for login")
+parser.add_argument("name", type=str, help="Child Name")
 
 # Parse the command-line arguments
 args = parser.parse_args()
@@ -36,13 +26,30 @@ args = parser.parse_args()
 # Now you can access the arguments as attributes of the 'args' object
 username = args.username
 password = args.password
-login_url = args.login_url
+child_name = args.name
+
+# MQTT Setup
+broker = "192.168.0.14"
+port = 1883
+topic = f"homeassistant/sensor/timetable/{child_name}"
+# Generate a Client ID with the publish prefix.
+client_id = f'publish-{random.randint(0, 1000)}'
+username_mqtt = 'craig'
+password_mqtt = 'revaeb'
+
+if child_name == 'Autumn':
+    login_url = "https://st-john-plessington.uk.arbor.sc/?/guardians/home-ui/dashboard/student-id/6336"
+elif child_name == 'Lizzy':
+    login_url = "https://st-john-plessington.uk.arbor.sc/?/guardians/home-ui/dashboard/student-id/6337"
+else:
+    login_url = "https://st-john-plessington.uk.arbor.sc/?/home-ui/index"
+
 
 def request_info():
     try:
         # Set up the ChromeOptions with undetected-chromedriver
         chrome_options = ChromeOptions()
-        chrome_options.add_argument('--headless')  # Run Chrome in headless mode (no GUI)
+        chrome_options.add_argument('--headless=new')  # Run Chrome in headless mode (no GUI)
         chrome_options.add_argument('--disable-extensions')
         chrome_options.add_argument('--disable-infobars')
         chrome_options.add_argument('--disable-popup-blocking')
