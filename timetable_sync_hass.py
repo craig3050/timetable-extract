@@ -31,7 +31,7 @@ child_name = args.name
 # MQTT Setup
 broker = "192.168.0.14"
 port = 1883
-topic = f"homeassistant/sensor/timetable/{child_name}"
+topic = f"homeassistant/text/timetable/{child_name}"
 # Generate a Client ID with the publish prefix.
 client_id = f'publish-{random.randint(0, 1000)}'
 username_mqtt = 'craig'
@@ -160,8 +160,8 @@ def connect_mqtt():
 
 
 def publish(client, message):
-    msg = f"messages: {message}"
-    result = client.publish(topic, message)
+    msg = f"{message}"
+    result = client.publish(topic, msg)
     status = result[0]
     if status == 0:
         print(f"Send `{msg}` to topic `{topic}`")
